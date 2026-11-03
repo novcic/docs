@@ -46,6 +46,8 @@ Response type: [Order](/schemas/Order). No envelope or `retCode` wrapper is adde
 
 | Field | Type | Required | Meaning |
 | --- | --- | --- | --- |
+| `closingJobId` | string (uuid) or null | Yes | Closing job id. |
+| `replacesId` | string (uuid) or null | Yes | Replaces id. |
 | `instrumentId` | string | Yes | Canonical instrument ID from GET /api/products. Use the ID, not the display symbol. |
 | `leverage` | string | Yes | Integer leverage 1 through 10, serialized as a string. |
 | `reduceOnly` | boolean | Yes | If true, execution must reduce an existing derivative position. |
@@ -64,11 +66,14 @@ Response type: [Order](/schemas/Order). No envelope or `retCode` wrapper is adde
 | `quoteValidatedAt` | string (date-time) or null | Yes | Internal maker quote freshness timestamp, nullable for participant orders. |
 | `createdAt` | string (date-time) | Yes | UTC creation timestamp. |
 | `averageExecutionPrice` | string or null | Yes | All execution notional divided by filled quantity, excluding fees; null when unfilled. |
+| `version` | string | Yes | Opaque optimistic concurrency token. Send unchanged to amend-order; fills/cancellation invalidate it. |
 
 Illustrative structure (zero values and identifiers are placeholders, not market data):
 
 ```json
 {
+  "closingJobId": null,
+  "replacesId": null,
   "instrumentId": "string",
   "leverage": "0",
   "reduceOnly": false,
@@ -86,7 +91,8 @@ Illustrative structure (zero values and identifiers are placeholders, not market
   "cancelReason": null,
   "quoteValidatedAt": null,
   "createdAt": "2026-11-03T12:00:00Z",
-  "averageExecutionPrice": null
+  "averageExecutionPrice": null,
+  "version": "string"
 }
 ```
 

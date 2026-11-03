@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.3.0 - Position protection and chart trading
+
+- Added versioned entire-position TP/SL OCO, durable reduce-only closing, stop-closing and atomic limit-price amendments.
+- Added lifecycle-aware position valuation, unrealized P&L/return, weighted option entry and approximate cross-margin liquidation metrics.
+- All active orders are returned; repeated closing attempts are grouped by job. Added order version, replacement and closing-job fields.
+- TP/SL and limit-price changes are available on charts with confirmation, with a selected-contract options chart and keyboard alternatives.
+
+
 ## 1.2.0 - Profiles, product permissions and live estimates
 
 Added private profiles, random usernames, preset avatars, birth dates and password/email changes with immediate session/key revocation. API keys now enforce product permissions. Market sizing and estimates use last traded price with reference fallback, without liquidity caps or matching simulation. Existing keys retain their prior access across all products; newly created keys default to Spot when products is omitted.

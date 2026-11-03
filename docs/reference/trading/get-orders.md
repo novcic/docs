@@ -2,7 +2,7 @@
 
 `GET /api/orders`
 
-Latest 200 account orders, descending sequence, then filtered to API-key product permissions. Includes closed orders. No cursor, offset or history export endpoint is implemented.
+All active orders plus the latest 200 closed account orders, descending sequence, then filtered to API-key product permissions. Closed TP/SL attempts are grouped to the latest per closingJobId. No cursor, offset or history export endpoint is implemented.
 
 ## Authentication
 
@@ -16,7 +16,7 @@ No path, query or command headers required.
 
 ## Behavior
 
-Latest 200 account orders, descending sequence, then filtered to API-key product permissions. Includes closed orders. No cursor, offset or history export endpoint is implemented.
+All active orders plus the latest 200 closed account orders, descending sequence, then filtered to API-key product permissions. Closed TP/SL attempts are grouped to the latest per closingJobId. No cursor, offset or history export endpoint is implemented.
 
 ## Request example
 
@@ -32,6 +32,8 @@ Response type: [Order[]](/schemas/Order). No envelope or `retCode` wrapper is ad
 
 | Field | Type | Required | Meaning |
 | --- | --- | --- | --- |
+| `closingJobId` | string (uuid) or null | Yes | Closing job id. |
+| `replacesId` | string (uuid) or null | Yes | Replaces id. |
 | `instrumentId` | string | Yes | Canonical instrument ID from GET /api/products. Use the ID, not the display symbol. |
 | `leverage` | string | Yes | Integer leverage 1 through 10, serialized as a string. |
 | `reduceOnly` | boolean | Yes | If true, execution must reduce an existing derivative position. |
@@ -50,6 +52,7 @@ Response type: [Order[]](/schemas/Order). No envelope or `retCode` wrapper is ad
 | `quoteValidatedAt` | string (date-time) or null | Yes | Internal maker quote freshness timestamp, nullable for participant orders. |
 | `createdAt` | string (date-time) | Yes | UTC creation timestamp. |
 | `averageExecutionPrice` | string or null | Yes | All execution notional divided by filled quantity, excluding fees; null when unfilled. |
+| `version` | string | Yes | Opaque optimistic concurrency token. Send unchanged to amend-order; fills/cancellation invalidate it. |
 
 Illustrative structure (zero values and identifiers are placeholders, not market data):
 

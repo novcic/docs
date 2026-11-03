@@ -15,7 +15,7 @@ The exchange supports spot, perpetual futures, expiry futures and European optio
 
 A market order never rests its remainder. Spot rejects an entirely unexecutable market order; derivative market orders can return Cancelled with their entire quantity remaining. A cancellation reason can identify self-trade prevention, unfilled market remainder, stale AMM quote or risk restrictions. Reasons are human-readable strings.
 
-Crossing your own resting order stops execution of the incoming remainder. There are no public batch, amend, stop, trigger, time-in-force or user post-only parameters. Cancel then place a new intent to replace an order; the new order receives new queue priority and can race with fills on the old one.
+Crossing your own resting order stops execution of the incoming remainder. There are no general batch, time-in-force or user post-only parameters. Use the versioned amend endpoint for atomic limit-price replacement, and position protection for derivative TP/SL (described below).
 
 ## Spot
 
@@ -44,3 +44,28 @@ Order cost is the input asset amount for spot (BTC for sells, USDT for buys), an
 Order responses include filledNotional and averageExecutionPrice. Average is all fill notional divided by executed quantity, including fills outside the recent-trades window; null means no fills. A partially executed market order can be Cancelled with a nonzero average and remaining quantity.
 
 Browser Cancel all applies across the entire account. HMAC Cancel all is restricted to selected products. The response cancelled count is authoritative. Balance activity excludes zero-net reserve/release entries before selecting the latest 100; the internal ledger retains them for audit.
+
+
+## Amend an owned limit order
+
+Read `id`, `instrumentId`, `version` and `remaining` from `/api/orders`. Submit `POST /api/amend-order` with `instrument`, `id`, the unchanged opaque `version`, and a new `price` (positive, tick 0.01). The remaining quantity becomes a new order with fresh time priority and `replacesId` pointing to the old ID. Existing fills remain on the original order. If the price crosses, the replacement can immediately execute. An unchanged price is a no-op.
+
+Cancellation, replacement, collateral checks and the idempotency receipt commit together. An invalid price, changed version, insufficient balance/margin, or wrong owner/product rolls back the whole command. After a stale-version 400, refresh and review a new intent. For a timeout or 5xx, retry the same UUID and unchanged payload before doing anything else.
+
+`GET /api/orders` returns every active order plus the latest 200 closed orders. TP/SL retry orders share `closingJobId`; this endpoint returns only the latest closed attempt per job. Read aggregate attempts and remaining position from `portfolio.positions[].protection`, and actual executions from trades. No public order identity appears in market depth.
+
+## Entire-position TP/SL and OCO
+
+Perpetuals, expiry futures and options support `POST /api/position-protection`. Read a current position, then send its `instrument`, `lifecycleId`, `version` as `positionVersion`, existing protection `version` as `protectionVersion` (or `"0"` if absent), and optional `takeProfit` / `stopLoss` prices. Prices have tick 0.01. Both null remove the protection. For a long, TP must be above the current last trade and SL below it; reverse these conditions for a short. A last trade is required. Already crossed prices are rejected, rather than silently activated.
+
+Protection is tied to one uninterrupted position direction. Adds and reductions retain it; flat, reversal or expiry ends it. Changes to size/entry or protection invalidate a stale edit. Only one pair exists per lifecycle. It can be edited while Armed, or rearmed after cancellation. Stop an active Closing job before editing.
+
+Each committed trade on that instrument is checked atomically in sequence. The first reached leg switches Armed to Closing and cancels its sibling, even if price moves back before the worker runs. The trigger is **last trade**, including an option's premium; it is not the index or risk mark. `triggerSequence` and `triggerLeg` identify the trigger.
+
+The server persists the job and attempts a reduce-only market order for the current entire position roughly every 100 ms. Workers serialize with all financial commands, never overlap the same job or catch up with bursts. The cadence is a target under available capacity, not a hard real-time promise. No liquidity, stale reference prices, insufficient execution fees, or other ordinary restrictions leave a visible waiting reason and defer another attempt. Fills, fees and job progress commit atomically. Restarts resume Closing jobs. A gap can execute far from the trigger; TP/SL does not guarantee price or completion.
+
+Other trading remains enabled during closing. Adding in the same direction increases the quantity to close. Manual reduction changes the next attempt; reaching zero or reversing cancels the old lifecycle, so a reopened position is never closed by its predecessor. Expired instruments stop accepting retries. `POST /api/stop-closing` requires instrument, protection id and current version; it stops future attempts and preserves already committed fills.
+
+`Market Close` in the UI submits one reduce-only market order. It does not create a persistent job. Chart entry-line drags propose TP/SL without changing entry; trigger and owned limit lines open confirmations before submission. The table's Set TP/SL and Edit actions provide keyboard alternatives. Options start on Chain and offer Chart for the selected contract.
+
+All three commands require a session or a Trade HMAC key permitted for the instrument's product, plus a persisted UUID Idempotency-Key. Read keys cannot mutate protection or prices.

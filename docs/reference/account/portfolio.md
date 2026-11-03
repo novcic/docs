@@ -2,7 +2,7 @@
 
 `GET /api/portfolio`
 
-A consistent account snapshot. Includes all positions, loans, supplies and DCA schedules; latest 100 risk events and liquidity requests. Funding balances are outside cross-margin equity.
+A consistent account snapshot. Includes positions (including flat rows) with valuation, lifecycle and protection details, loans, supplies and DCA schedules; latest 100 risk events and liquidity requests. Funding balances are outside cross-margin equity.
 
 ## Authentication
 
@@ -16,7 +16,7 @@ No path, query or command headers required.
 
 ## Behavior
 
-A consistent account snapshot. Includes all positions, loans, supplies and DCA schedules; latest 100 risk events and liquidity requests. Funding balances are outside cross-margin equity.
+A consistent account snapshot. Includes positions (including flat rows) with valuation, lifecycle and protection details, loans, supplies and DCA schedules; latest 100 risk events and liquidity requests. Funding balances are outside cross-margin equity.
 
 ## Request example
 
@@ -34,7 +34,7 @@ Response type: [Portfolio](/schemas/Portfolio). No envelope or `retCode` wrapper
 | --- | --- | --- | --- |
 | `leverage` | string | Yes | Integer leverage 1 through 10, serialized as a string. |
 | `risk` | RiskSnapshot | Yes |  |
-| `positions` | Position[] | Yes |  |
+| `positions` | PositionView[] | Yes |  |
 | `loans` | Loan[] | Yes |  |
 | `supplies` | Supply[] | Yes |  |
 | `liquidity` | LiquidityShare or null | Yes |  |

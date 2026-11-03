@@ -4,6 +4,8 @@ Fields are case-sensitive. Numeric amounts and integer counters are JSON strings
 
 | Field | Type | Required | Meaning |
 | --- | --- | --- | --- |
+| `closingJobId` | string (uuid) or null | Yes | Closing job id. |
+| `replacesId` | string (uuid) or null | Yes | Replaces id. |
 | `instrumentId` | string | Yes | Canonical instrument ID from GET /api/products. Use the ID, not the display symbol. |
 | `leverage` | string | Yes | Integer leverage 1 through 10, serialized as a string. |
 | `reduceOnly` | boolean | Yes | If true, execution must reduce an existing derivative position. |
@@ -22,5 +24,6 @@ Fields are case-sensitive. Numeric amounts and integer counters are JSON strings
 | `quoteValidatedAt` | string (date-time) or null | Yes | Internal maker quote freshness timestamp, nullable for participant orders. |
 | `createdAt` | string (date-time) | Yes | UTC creation timestamp. |
 | `averageExecutionPrice` | string or null | Yes | All execution notional divided by filled quantity, excluding fees; null when unfilled. |
+| `version` | string | Yes | Opaque optimistic concurrency token. Send unchanged to amend-order; fills/cancellation invalidate it. |
 
 Nested types are defined in the response schema navigation and the [OpenAPI contract](/openapi.json).
