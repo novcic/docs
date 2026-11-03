@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.4.0 - Completed-position PnL history
+
+- Added paginated `/api/pnl-history` for complete derivative lifecycles, with product/instrument/UTC closing-date filters and product authorization before pagination.
+- Includes weighted entry/exit, total quantity, gross and final net PnL, actual opening/closing fees, signed funding, UTC times and duration.
+- Reversals split lifecycles and fees; settlement uses actual rounded cash. Legacy rows without verifiable fees/funding/settlement are omitted.
+- Refined Positions labels and action placement; added the PnL history terminal tab with live refresh and detailed net breakdown. Shared Meadow branding is version 1.5.0.
+
 ## 1.3.0 - Position protection and chart trading
 
 - Added versioned entire-position TP/SL OCO, durable reduce-only closing, stop-closing and atomic limit-price amendments.

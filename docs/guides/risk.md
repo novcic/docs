@@ -22,7 +22,7 @@ No endpoint changes margin mode, establishes isolated margin, sets risk tiers or
 
 `POST /api/leverage-preview` accepts the same body, checks the proposed account and returns its risk snapshot without committing changes. It requires no idempotency key. Trade HMAC keys and JWT sessions can use both endpoints.
 
-New accounts default to 1?. Migrated accounts use the highest leverage among their active futures positions/orders; this avoids raising margin requirements on migration. The per-order `leverage` field is deprecated: omit it. A supplied futures value must equal the account setting or the order is rejected.
+New accounts default to 1x. Migrated accounts use the highest leverage among their active futures positions/orders; this avoids raising margin requirements on migration. The per-order `leverage` field is deprecated: omit it. A supplied futures value must equal the account setting or the order is rejected.
 
 
 ## Position metrics
@@ -32,3 +32,6 @@ New accounts default to 1?. Migrated accounts use the highest leverage among the
 `returnOnMarginPercent = 100 * unrealizedPnl / entryMargin`. For futures the denominator is remaining entry notional divided by current account leverage, so changing leverage changes the reported percentage. For long options it is remaining paid premium; for short puts full strike cover; for short calls BTC cover valued at the current index. This percentage is not a wallet return or a forecast. Realized P&L uses closing-trade basis; option premium cash flows and settlement cash remain separate. Values requiring unavailable/stale prices return null, not zero.
 
 `liquidationPrice` is an approximate scenario for the selected futures position: change only that position's mark, hold all other marks and collateral values constant, and solve equity = maintenance. With signed quantity q, current mark m, account equity E and maintenance M, it is `(M - E + (q - abs(q)*0.005)*m) / (q - abs(q)*0.005)`. It returns null without a positive solution or fresh inputs. BTC collateral values, other positions, orders, funding and fees can change actual risk; the threshold is not a guaranteed execution or liquidation price. Covered options return null / Not applicable, since the current liquidation engine liquidates futures, not covered option positions.
+
+
+The terminal labels `returnOnMarginPercent` as ROI, shows Entry / Current last-trade movement, and separates Unrealized and Realized USDT lines. Liquidation price shows `-` when unavailable; the estimate retains the cross-account assumptions above. These live gross position metrics differ from the net completed lifecycle in [PnL history](./trading.md#closed-position-pnl-history), which includes actual fees and funding.

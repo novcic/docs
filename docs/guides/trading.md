@@ -69,3 +69,29 @@ Other trading remains enabled during closing. Adding in the same direction incre
 `Market Close` in the UI submits one reduce-only market order. It does not create a persistent job. Chart entry-line drags propose TP/SL without changing entry; trigger and owned limit lines open confirmations before submission. The table's Set TP/SL and Edit actions provide keyboard alternatives. Options start on Chain and offer Chart for the selected contract.
 
 All three commands require a session or a Trade HMAC key permitted for the instrument's product, plus a persisted UUID Idempotency-Key. Read keys cannot mutate protection or prices.
+
+
+## Closed-position PnL history
+
+`GET /api/pnl-history` returns `{items, nextCursor}` for verified completed perpetual, expiry-futures and option lifecycles. One lifecycle starts at the first fill from flat and ends when flat, reversed or settled. Partial reductions and same-direction additions accumulate into that row. A reversal closes the old direction and opens a new one; its actual execution fee is allocated between them without losing a rounding remainder. Spot trades are not position history.
+
+`quantity` is total quantity opened over the lifecycle, not peak exposure or the last remaining position. `averageEntry` and `averageExit` divide total opening/closing notional by that quantity. Expiry uses actual rounded settlement cash and remaining basis for the closing notional, including zero intrinsic value for an option. It adds no synthetic execution fee.
+
+Final `netPnl = grossPnl - openingFee - closingFee + funding`. All amounts are exact decimal strings in USDT; quantity is BTC. Positive funding was received; negative funding was paid. Opening and closing fees come from actual fills. A delayed funding run can update a closed row belonging to its boundary. This economic result is separate from withdrawable cash: a clearing claim may await funded settlement.
+
+### Filtering and pagination
+
+Optional `instrument` is a canonical ID; `product` is `Perpetual`, `Future` or `Option`. `from` and `to` are inclusive UTC **closing dates** in `YYYY-MM-DD` form. `limit` defaults to 50 and accepts 1-100. Ownership and API-key product permissions apply before filters and pagination; a Spot-only key receives an empty list. Both Read and Trade keys can read permitted history.
+
+Rows sort by `closedAt` descending then `id` descending. Copy `nextCursor` into the next request, retaining filters and account. Null means the end. A foreign, filtered-out or invalid cursor returns 400. Each page is a live read: newly closed rows appear at the front on refresh, while delayed funding may change values. Refresh loaded pages when reconciling results; do not treat them as an immutable export snapshot.
+
+```bash
+curl -sS "$NOVCIC_URL/api/pnl-history?product=Perpetual&from=2026-11-01&to=2026-11-30&limit=50" \
+  -H "Authorization: Bearer $NOVCIC_TOKEN"
+```
+
+`openedAt` and `closedAt` are UTC ISO timestamps; `durationSeconds` is whole elapsed seconds encoded as a string. The browser's PnL history tab offers product/instrument/date filters, fee/funding breakdowns and Load more, preserving scroll and edits during refresh.
+
+### Historical coverage
+
+New history is written in the same transaction as matching, funding or settlement. Startup reconstruction does not alter balances. Older lifecycles lacking recorded execution fees or spanning unlinked legacy funding/settlement are omitted from this endpoint rather than given estimated net results. An open lifecycle with incomplete old records remains unverified when it eventually closes. Existing trades and ledger entries remain available through their own endpoints; absence from PnL history does not mean there was no trading.

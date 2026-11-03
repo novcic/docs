@@ -65,7 +65,7 @@ For 401, check key expiry/revocation, scope, clock skew, nonce reuse, path encod
 
 ## Product permissions and account security
 
-Keys select one or more of Spot, Perpetual, Future and Option. API creation defaults to Spot when products is omitted. Existing keys migrated with all four permissions, retaining their Read/Trade scope. Permissions are immutable: revoke and recreate to change them. Order/trade responses apply product filtering after the latest-200 window; portfolio positions are filtered, while aggregate account risk remains shared.
+Keys select one or more of Spot, Perpetual, Future and Option. API creation defaults to Spot when products is omitted. Existing keys migrated with all four permissions, retaining their Read/Trade scope. Permissions are immutable: revoke and recreate to change them. Order/trade responses apply product filtering after the latest-200 window; portfolio positions are filtered, while aggregate account risk remains shared. PnL history applies ownership and product permissions before pagination, so unauthorized rows never consume page slots.
 
 Order writes, previews and single cancellations verify the actual instrument category. Cancel all acts only on permitted products. Leverage writes require Trade and both futures products; leverage preview permits Read with both futures products. Read keys can call non-mutating order previews for selected products. Authenticated requests lacking permission receive 403. Keys cannot access profile/security endpoints, transfers, withdrawals, Earn, LP or DCA writes.
 
