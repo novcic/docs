@@ -2,7 +2,7 @@
 
 `GET /api/trades`
 
-Latest 200 account trades across instruments, descending sequence. buyerId and sellerId determine your side. Public /market strips counterparty identity.
+Latest 200 account trades, descending sequence, then filtered to API-key product permissions. buyerId and sellerId determine your side. Public /market strips counterparty identity.
 
 ## Authentication
 
@@ -16,7 +16,7 @@ No path, query or command headers required.
 
 ## Behavior
 
-Latest 200 account trades across instruments, descending sequence. buyerId and sellerId determine your side. Public /market strips counterparty identity.
+Latest 200 account trades, descending sequence, then filtered to API-key product permissions. buyerId and sellerId determine your side. Public /market strips counterparty identity.
 
 ## Request example
 

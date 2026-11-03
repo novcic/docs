@@ -2,7 +2,7 @@
 
 `GET /api/auth/me`
 
-Returns only account ID, email and country.
+Returns account ID, email, country, username and avatar.
 
 ## Authentication
 
@@ -16,7 +16,7 @@ No path, query or command headers required.
 
 ## Behavior
 
-Returns only account ID, email and country.
+Returns account ID, email, country, username and avatar.
 
 ## Request example
 
@@ -35,6 +35,8 @@ Response type: [User](/schemas/User). No envelope or `retCode` wrapper is added.
 | `id` | string (uuid) | Yes | Stable identifier for this resource. |
 | `email` | string | Yes | Email. |
 | `country` | string | Yes | Country. |
+| `username` | string | Yes | Username. |
+| `avatar` | string | Yes | Avatar. |
 
 Illustrative structure (zero values and identifiers are placeholders, not market data):
 
@@ -42,7 +44,9 @@ Illustrative structure (zero values and identifiers are placeholders, not market
 {
   "id": "11111111-1111-4111-8111-111111111111",
   "email": "string",
-  "country": "string"
+  "country": "string",
+  "username": "string",
+  "avatar": "string"
 }
 ```
 

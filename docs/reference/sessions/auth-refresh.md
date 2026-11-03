@@ -51,7 +51,9 @@ Illustrative structure (zero values and identifiers are placeholders, not market
   "user": {
     "id": "11111111-1111-4111-8111-111111111111",
     "email": "string",
-    "country": "string"
+    "country": "string",
+    "username": "string",
+    "avatar": "string"
   }
 }
 ```

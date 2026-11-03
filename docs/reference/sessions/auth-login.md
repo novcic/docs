@@ -2,7 +2,7 @@
 
 `POST /api/auth/login`
 
-Returns access token and refresh cookie. Invalid credentials return 401. Registration, login and refresh share a fixed-window limit of 30 requests per minute per IP.
+Returns access token and refresh cookie. Access tokens include a security version invalidated by account security changes. Invalid credentials return 401. Registration, login and refresh share a fixed-window limit of 30 requests per minute per IP.
 
 ## Authentication
 
@@ -23,7 +23,7 @@ No path, query or command headers required.
 
 ## Behavior
 
-Returns access token and refresh cookie. Invalid credentials return 401. Registration, login and refresh share a fixed-window limit of 30 requests per minute per IP.
+Returns access token and refresh cookie. Access tokens include a security version invalidated by account security changes. Invalid credentials return 401. Registration, login and refresh share a fixed-window limit of 30 requests per minute per IP.
 
 ## Request example
 
@@ -52,7 +52,9 @@ Illustrative structure (zero values and identifiers are placeholders, not market
   "user": {
     "id": "11111111-1111-4111-8111-111111111111",
     "email": "string",
-    "country": "string"
+    "country": "string",
+    "username": "string",
+    "avatar": "string"
   }
 }
 ```

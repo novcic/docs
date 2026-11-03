@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.0 - Profiles, product permissions and live estimates
+
+Added private profiles, random usernames, preset avatars, birth dates and password/email changes with immediate session/key revocation. API keys now enforce product permissions. Market sizing and estimates use last traded price with reference fallback, without liquidity caps or matching simulation. Existing keys retain their prior access across all products; newly created keys default to Spot when products is omitted.
+
+
 ## 1.1.0 - Execution fees and account leverage
 
 All customer fills now pay execution fees; spot fees are deducted from received assets. Added account leverage and rollback-only order/leverage previews, per-execution fee fields, average execution prices and BTC pool-fee reporting. Balance activity omits zero-net reservations/releases. Meadow 1.1 adds padded tabs and accessible notifications.

@@ -2,7 +2,7 @@
 
 `GET /api/config`
 
-Read configured ticks and AMM fees. Legacy fees is user-to-user only; use amm for execution fees. DerivativeLevels is the maximum per-side target before tick collisions and risk constraints.
+Read configured ticks and execution fees. Use amm for product-specific rates. DerivativeLevels is the maximum per-side target before tick collisions and risk constraints.
 
 ## Authentication
 
@@ -16,7 +16,7 @@ No path, query or command headers required.
 
 ## Behavior
 
-Read configured ticks and AMM fees. Legacy fees is user-to-user only; use amm for execution fees. DerivativeLevels is the maximum per-side target before tick collisions and risk constraints.
+Read configured ticks and execution fees. Use amm for product-specific rates. DerivativeLevels is the maximum per-side target before tick collisions and risk constraints.
 
 ## Request example
 

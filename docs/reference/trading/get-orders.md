@@ -2,7 +2,7 @@
 
 `GET /api/orders`
 
-Latest 200 account orders across instruments, descending sequence. Includes closed orders. No cursor, offset or history export endpoint is implemented.
+Latest 200 account orders, descending sequence, then filtered to API-key product permissions. Includes closed orders. No cursor, offset or history export endpoint is implemented.
 
 ## Authentication
 
@@ -16,7 +16,7 @@ No path, query or command headers required.
 
 ## Behavior
 
-Latest 200 account orders across instruments, descending sequence. Includes closed orders. No cursor, offset or history export endpoint is implemented.
+Latest 200 account orders, descending sequence, then filtered to API-key product permissions. Includes closed orders. No cursor, offset or history export endpoint is implemented.
 
 ## Request example
 

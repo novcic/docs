@@ -8,5 +8,6 @@ Fields are case-sensitive. Numeric amounts and integer counters are JSON strings
 | `secret` | string | Yes | Secret. |
 | `scope` | string | Yes | Scope. |
 | `expiresAt` | string (date-time) | Yes | UTC expiry timestamp. |
+| `products` | string[] | Yes | Product permissions. Omitted on creation defaults to Spot. |
 
 Nested types are defined in the response schema navigation and the [OpenAPI contract](/openapi.json).

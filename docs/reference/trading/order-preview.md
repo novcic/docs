@@ -2,11 +2,11 @@
 
 `POST /api/order-preview`
 
-Evaluates the matching engine in rollback-only savepoints. Returns maximum executable quantity, estimated fee, net receipt/order cost and revision. quantity=0 estimates Max. No balances, trades, orders or receipts persist; database identity sequences may have gaps. Submission revalidates live state. No Idempotency-Key required.
+Price-based estimates with no depth cap or simulated execution. Market pricing uses last trade, otherwise reference index/theoretical option premium. Limit uses entered price. quantity=0 estimates Max. Returns referencePrice and priceSource. No writes, sequence allocation or Idempotency-Key. Actual fills and risk revalidate on execution. HMAC keys require instrument product permission.
 
 ## Authentication
 
-Bearer JWT or an HMAC-signed Trade API key. Read keys cannot submit this command. See [authentication](/guides/authentication).
+Bearer JWT or an HMAC-signed Read/Trade API key. See [authentication](/guides/authentication).
 
 This endpoint does not use the financial command receipt mechanism.
 
@@ -27,7 +27,7 @@ No path, query or command headers required.
 
 ## Behavior
 
-Evaluates the matching engine in rollback-only savepoints. Returns maximum executable quantity, estimated fee, net receipt/order cost and revision. quantity=0 estimates Max. No balances, trades, orders or receipts persist; database identity sequences may have gaps. Submission revalidates live state. No Idempotency-Key required.
+Price-based estimates with no depth cap or simulated execution. Market pricing uses last trade, otherwise reference index/theoretical option premium. Limit uses entered price. quantity=0 estimates Max. Returns referencePrice and priceSource. No writes, sequence allocation or Idempotency-Key. Actual fills and risk revalidate on execution. HMAC keys require instrument product permission.
 
 ## Request example
 
@@ -52,6 +52,8 @@ Response type: [OrderPreview](/schemas/OrderPreview). No envelope or `retCode` w
 | `orderCostAsset` | string | Yes | Order cost asset. |
 | `revision` | string | Yes | Revision. |
 | `error` | string or null | No | Human-readable error; nullable on transfer history. |
+| `referencePrice` | string or null | No | Reference price. |
+| `priceSource` | string | Yes | Price source. |
 
 Illustrative structure (zero values and identifiers are placeholders, not market data):
 
@@ -65,7 +67,9 @@ Illustrative structure (zero values and identifiers are placeholders, not market
   "orderCost": "0",
   "orderCostAsset": "string",
   "revision": "0",
-  "error": null
+  "error": null,
+  "referencePrice": null,
+  "priceSource": "string"
 }
 ```
 

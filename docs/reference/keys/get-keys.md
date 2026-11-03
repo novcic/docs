@@ -38,6 +38,7 @@ Response type: [ApiKey[]](/schemas/ApiKey). No envelope or `retCode` wrapper is 
 | `createdAt` | string (date-time) | Yes | UTC creation timestamp. |
 | `expiresAt` | string (date-time) | Yes | UTC expiry timestamp. |
 | `revoked` | boolean | Yes | Revoked. |
+| `products` | string[] | Yes | Product permissions. Omitted on creation defaults to Spot. |
 
 Illustrative structure (zero values and identifiers are placeholders, not market data):
 

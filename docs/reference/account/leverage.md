@@ -2,7 +2,7 @@
 
 `POST /api/leverage`
 
-Integer 1-10. Applies immediately to all perpetual and expiry-futures positions and open orders. Insufficient margin rejects the entire change.
+Trade keys require both Perpetual and Future permissions. Integer 1-10. Applies immediately to all perpetual and expiry-futures positions and open orders. Insufficient margin rejects the entire change.
 
 ## Authentication
 
@@ -24,7 +24,7 @@ Bearer JWT or an HMAC-signed Trade API key. Read keys cannot submit this command
 
 ## Behavior
 
-Integer 1-10. Applies immediately to all perpetual and expiry-futures positions and open orders. Insufficient margin rejects the entire change.
+Trade keys require both Perpetual and Future permissions. Integer 1-10. Applies immediately to all perpetual and expiry-futures positions and open orders. Insufficient margin rejects the entire change.
 
 ## Request example
 

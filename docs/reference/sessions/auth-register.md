@@ -2,7 +2,7 @@
 
 `POST /api/auth/register`
 
-Email is normalized to lowercase. Password requires 10-128 characters including a letter and digit. Country is uppercase ISO alpha-2. Returns a 10-minute access token and sets a rotating 7-day HttpOnly refresh cookie.
+Email is normalized to lowercase. Assigns a unique random User######## username and default avatar. Password requires 10-128 characters including a letter and digit. Country is uppercase ISO alpha-2. Returns a 10-minute access token and sets a rotating 7-day HttpOnly refresh cookie.
 
 ## Authentication
 
@@ -24,7 +24,7 @@ No path, query or command headers required.
 
 ## Behavior
 
-Email is normalized to lowercase. Password requires 10-128 characters including a letter and digit. Country is uppercase ISO alpha-2. Returns a 10-minute access token and sets a rotating 7-day HttpOnly refresh cookie.
+Email is normalized to lowercase. Assigns a unique random User######## username and default avatar. Password requires 10-128 characters including a letter and digit. Country is uppercase ISO alpha-2. Returns a 10-minute access token and sets a rotating 7-day HttpOnly refresh cookie.
 
 ## Request example
 
@@ -53,7 +53,9 @@ Illustrative structure (zero values and identifiers are placeholders, not market
   "user": {
     "id": "11111111-1111-4111-8111-111111111111",
     "email": "string",
-    "country": "string"
+    "country": "string",
+    "username": "string",
+    "avatar": "string"
   }
 }
 ```

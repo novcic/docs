@@ -2,11 +2,11 @@
 
 `POST /api/leverage-preview`
 
-Rollback-only evaluation of the proposed account leverage and margin. No receipt or account change. Insufficient margin returns 400.
+Read or Trade keys require both futures permissions. Rollback-only evaluation of the proposed account leverage and margin. No receipt or account change. Insufficient margin returns 400.
 
 ## Authentication
 
-Bearer JWT or an HMAC-signed Trade API key. Read keys cannot submit this command. See [authentication](/guides/authentication).
+Bearer JWT or an HMAC-signed Read/Trade API key. See [authentication](/guides/authentication).
 
 This endpoint does not use the financial command receipt mechanism.
 
@@ -22,7 +22,7 @@ No path, query or command headers required.
 
 ## Behavior
 
-Rollback-only evaluation of the proposed account leverage and margin. No receipt or account change. Insufficient margin returns 400.
+Read or Trade keys require both futures permissions. Rollback-only evaluation of the proposed account leverage and margin. No receipt or account change. Insufficient margin returns 400.
 
 ## Request example
 

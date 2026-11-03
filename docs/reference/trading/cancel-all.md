@@ -2,7 +2,7 @@
 
 `POST /api/cancel-all`
 
-Cancels your open and partially-filled orders across every instrument and releases reserved spot funds.
+Cancels open orders across all instruments for browser sessions, or only permitted products for HMAC keys. Releases reserved spot funds.
 
 ## Authentication
 
@@ -24,7 +24,7 @@ Bearer JWT or an HMAC-signed Trade API key. Read keys cannot submit this command
 
 ## Behavior
 
-Cancels your open and partially-filled orders across every instrument and releases reserved spot funds.
+Cancels open orders across all instruments for browser sessions, or only permitted products for HMAC keys. Releases reserved spot funds.
 
 ## Request example
 

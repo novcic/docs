@@ -10,5 +10,6 @@ Fields are case-sensitive. Numeric amounts and integer counters are JSON strings
 | `createdAt` | string (date-time) | Yes | UTC creation timestamp. |
 | `expiresAt` | string (date-time) | Yes | UTC expiry timestamp. |
 | `revoked` | boolean | Yes | Revoked. |
+| `products` | string[] | Yes | Product permissions. Omitted on creation defaults to Spot. |
 
 Nested types are defined in the response schema navigation and the [OpenAPI contract](/openapi.json).
