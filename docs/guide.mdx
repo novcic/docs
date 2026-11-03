@@ -1,0 +1,43 @@
+---
+slug: /
+---
+# Build on Novčić
+
+<div className="guide-hero">
+  <p>Connect market data, manage orders, and integrate account workflows with the Novčić exchange.</p>
+  <p>Start with the authentication model and exact decimal formats, then explore the endpoint reference for the operation you need.</p>
+</div>
+
+<div className="guide-links">
+  <a href="./guides/quickstart/">Make your first request →</a>
+  <a href="./guides/authentication/">Authenticate your integration →</a>
+  <a href="./reference/public/market/">Read aggregated market depth →</a>
+  <a href="./openapi.json">Download OpenAPI 3.0 →</a>
+</div>
+
+## Connection details
+
+| Interface | Address | Purpose |
+| --- | --- | --- |
+| Local REST | `http://127.0.0.1:8081/api` | Public data and authenticated account operations |
+| Local SignalR hub | `http://127.0.0.1:8081/hubs/market` | Revision notifications; fetch snapshots through REST |
+| Public documentation | `https://novcic.github.io/docs/` | Integration contract and examples |
+
+Set the exchange origin with `NOVCIC_URL`. A hosted production API origin is not configured or announced in this release. GitHub Pages hosts documentation only; it does not accept trading requests. Network and token contract details come from `GET /api/network`.
+
+## Choose the correct credentials
+
+Public market data needs no credentials. Automated read access uses a **Read** API key; automated order placement and cancellation uses a **Trade** key. Both use HMAC-SHA256 signatures. Browser account management, wallet transfers, withdrawals, product subscriptions and key management use a **JWT session**. A Trade key does not grant withdrawal or transfer access.
+
+Novčić uses its own routes, signature payload and response shapes. Familiar navigation patterns are informed by [Bybit's integration documentation](https://bybit-exchange.github.io/docs/v5/guide); this API is not wire-compatible with Bybit.
+
+## Integration essentials
+
+- Keep amounts and prices as decimal strings. Use decimal arithmetic, never binary floating point for balances or order sizing.
+- Discover instruments through `/api/products`. Submit their canonical `id`, including `BTC-PERP` for the perpetual whose display symbol is `BTCUSDT`.
+- Persist an `Idempotency-Key` UUID for each financial intent. A retry uses the same key and body, with a new HMAC nonce and timestamp.
+- A successful order submission can be partially filled or cancelled. Check the returned state and reconcile executions.
+- SignalR announces invalidations, not order-book deltas. Refresh snapshots on connection and reconnection.
+- History endpoints return bounded recent lists without pagination. Persist the execution and ledger data your application needs.
+
+The [changelog](./changelog.md) records contract changes. [Maintenance](./maintenance.md) describes how the separate documentation repository stays synchronized with the exchange.

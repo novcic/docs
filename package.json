@@ -1,0 +1,22 @@
+{
+  "name": "novcic-api-docs",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "docusaurus start",
+    "build": "node scripts/check.mjs && node scripts/search.mjs && docusaurus build",
+    "serve": "docusaurus serve --host 127.0.0.1 --port 3000",
+    "check": "node scripts/check.mjs",
+    "test": "node --test examples/signing.test.mjs"
+  },
+  "dependencies": {
+    "@docusaurus/core": "3.10.2",
+    "@docusaurus/preset-classic": "3.10.2",
+    "@mdx-js/react": "^3.0.0",
+    "clsx": "^2.1.1",
+    "prism-react-renderer": "^2.4.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "engines": {"node": ">=20.0"}
+}

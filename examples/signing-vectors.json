@@ -1,0 +1,24 @@
+[
+  {
+    "name": "read with query",
+    "secret": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+    "timestamp": "1793707200000",
+    "nonce": "11111111-1111-4111-8111-111111111111",
+    "method": "GET",
+    "path": "/api/orders?instrument=BTC-PERP",
+    "commandKey": "",
+    "body": "",
+    "signature": "5b1dc4915176d62a401540f8bad0709886426f34c69fa1440904f823889a6ef5"
+  },
+  {
+    "name": "financial command",
+    "secret": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+    "timestamp": "1793707200000",
+    "nonce": "11111111-1111-4111-8111-111111111111",
+    "method": "POST",
+    "path": "/api/orders",
+    "commandKey": "22222222-2222-4222-8222-222222222222",
+    "body": "{\"instrument\":\"BTCUSDT\",\"side\":\"Buy\",\"type\":\"Limit\",\"quantity\":\"0.001000\",\"price\":\"75000.00\"}",
+    "signature": "01218526bca0076287f7fe244dc6b99e01fec6f24e4b2e67c31f658ccfa01b05"
+  }
+]
