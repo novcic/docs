@@ -1,8 +1,8 @@
 {
-  "version": "1.2.2",
+  "version": "1.3.0",
   "files": {
-    "BRANDING.md": "f78fbbd8c27a6b66133e538e72b58ada34db99cec2492752f745b044da9f5b09",
-    "branding/tokens.json": "ecfda4a721f48d9a32bb599e35379d41fccd1dbef748ade7b58ef0e9926a6a20",
+    "BRANDING.md": "204b26fc6d11f0f339962f6e6b11caacc7f1b92ac92ce12648e468bbd16a0d0e",
+    "branding/tokens.json": "c1f7ffcae328578b83be3e462acf9173290fdd580613bafc096c2bd859ca4d41",
     "src/css/tokens.css": "1a105a23663caea52f0306f3774a797e712c5d520de0cd0d4d5b3375d9d7b60e",
     "static/img/meadow.svg": "c11e7068e02f37e53adcf17a59d2d4ee1adc05277ee98b810971381153f0ab6d"
   }
