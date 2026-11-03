@@ -54,6 +54,7 @@ Illustrative structure (zero values and identifiers are placeholders, not market
     "usdt": "0",
     "shares": "0",
     "feesEarned": "0",
+    "feesEarnedBtc": "0",
     "nav": null
   },
   "optionAnalytics": []

@@ -2,7 +2,7 @@
 
 ## Permissions
 
-| Credential | Read account data | Place/cancel orders | Transfers, custody writes, Earn, LP, DCA | Manage keys |
+| Credential | Read account data | Orders, previews, leverage | Transfers, custody writes, Earn, LP, DCA | Manage keys |
 | --- | --- | --- | --- | --- |
 | Public | Public routes only | No | No | No |
 | Read HMAC key | Yes | No | No | No |

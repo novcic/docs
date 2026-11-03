@@ -19,7 +19,7 @@ Crossing your own resting order stops execution of the incoming remainder. There
 
 ## Spot
 
-Buy limits reserve quote funds; sells reserve BTC. Fills and wallet/journal movements commit atomically. Integrated AMM orders participate in this same book and matching rules. AMM execution can incur an additional USDT fee, so retain fee headroom. Funding wallets cannot trade directly; transfer to Unified Trading first.
+Buy limits reserve quote funds; sells reserve BTC. Fills and wallet/journal movements commit atomically. Integrated AMM orders participate in this same book and matching rules. Every customer fill pays a fee deducted from its received asset. Funding wallets cannot trade directly; transfer to Unified Trading first.
 
 ## Perpetual and expiry futures
 
@@ -32,3 +32,13 @@ Contracts settle in USDT under cross margin. Leverage is 1–10. New non-option 
 Options are European and cash-settled in USDT. Quantity is BTC exposure; price is premium per BTC. Buyers pay premium. Short calls require BTC cover and short puts require strike-value USDT cover. Coverage cannot also be withdrawn or reused for another obligation. Option mark/IV/delta depend on fresh, supported reference inputs; missing values remain null and new risk can pause.
 
 Keep positions, realized cash claims, wallet balances and execution history distinct. A realized profit is not immediately withdrawable unless clearing liquidity has funded it. See [risk](./risk.md) and [fees](./fees.md).
+
+## Affordability, fills and activity
+
+`POST /api/order-preview` accepts side, type, price (null for Market), instrument, reduceOnly and optional quantity. Set quantity to zero to estimate Max. It returns maximumQuantity, quantity, fee, feeAsset, netReceipt, orderCost, orderCostAsset, revision and error. Order cost is the input asset amount for spot (BTC for sells, USDT for buys) and incremental initial margin plus immediate USDT outflow for derivatives; spot netReceipt accounts for the received-asset fee. Limit estimates include the remaining limit quantity. Market estimates require executable liquidity for the selected quantity.
+
+The preview evaluates the actual engine in rollback-only savepoints under the command lock. It commits no order, balance, trade, receipt or revision. Database identity sequences can have gaps. Debounce preview requests; do not call once per market tick. The snapshot may change before submission. An error field describes an unavailable estimate; maximumQuantity can still identify a smaller affordable quantity. Invalid instruments or unavailable infrastructure may return HTTP errors.
+
+Order responses include filledNotional and averageExecutionPrice. Average is all fill notional divided by executed quantity, including fills outside the recent-trades window; null means no fills. A partially executed market order can be Cancelled with a nonzero average and remaining quantity.
+
+Cancel all applies across the entire account, not just the displayed market. The response cancelled count is authoritative. Balance activity excludes zero-net reserve/release entries before selecting the latest 100; the internal ledger retains them for audit.

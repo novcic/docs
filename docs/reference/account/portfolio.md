@@ -32,6 +32,7 @@ Response type: [Portfolio](/schemas/Portfolio). No envelope or `retCode` wrapper
 
 | Field | Type | Required | Meaning |
 | --- | --- | --- | --- |
+| `leverage` | string | Yes | Integer leverage 1 through 10, serialized as a string. |
 | `risk` | RiskSnapshot | Yes |  |
 | `positions` | Position[] | Yes |  |
 | `loans` | Loan[] | Yes |  |
@@ -45,6 +46,7 @@ Illustrative structure (zero values and identifiers are placeholders, not market
 
 ```json
 {
+  "leverage": "0",
   "risk": {
     "equity": "0",
     "initialMargin": "0",

@@ -4,6 +4,7 @@ Fields are case-sensitive. Numeric amounts and integer counters are JSON strings
 
 | Field | Type | Required | Meaning |
 | --- | --- | --- | --- |
+| `leverage` | string | Yes | Integer leverage 1 through 10, serialized as a string. |
 | `risk` | RiskSnapshot | Yes |  |
 | `positions` | Position[] | Yes |  |
 | `loans` | Loan[] | Yes |  |

@@ -44,10 +44,12 @@ Response type: [Order[]](/schemas/Order). No envelope or `retCode` wrapper is ad
 | `quantity` | string | Yes | BTC quantity. Signed quantities on positions: positive long, negative short. |
 | `remaining` | string | Yes | Unfilled BTC quantity. |
 | `reserved` | string | Yes | Funds reserved by this resource. |
+| `filledNotional` | string | Yes | Cumulative executed notional in USDT across all fills. |
 | `status` | string | Yes | Current lifecycle state. See the relevant guide for transitions. |
 | `cancelReason` | string or null | Yes | Cancel reason. |
 | `quoteValidatedAt` | string (date-time) or null | Yes | Internal maker quote freshness timestamp, nullable for participant orders. |
 | `createdAt` | string (date-time) | Yes | UTC creation timestamp. |
+| `averageExecutionPrice` | string or null | Yes | All execution notional divided by filled quantity, excluding fees; null when unfilled. |
 
 Illustrative structure (zero values and identifiers are placeholders, not market data):
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.0 - Execution fees and account leverage
+
+All customer fills now pay execution fees; spot fees are deducted from received assets. Added account leverage and rollback-only order/leverage previews, per-execution fee fields, average execution prices and BTC pool-fee reporting. Balance activity omits zero-net reservations/releases. Meadow 1.1 adds padded tabs and accessible notifications.
+
 ## 1.0.0 — 3 November 2026
 
 Initial public documentation release, audited against the implemented REST routes and models: 41 operations, including retired/disabled routes, with request parameters, authentication, response schemas and examples.

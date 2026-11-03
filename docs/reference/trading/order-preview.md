@@ -1,0 +1,74 @@
+# Preview order affordability
+
+`POST /api/order-preview`
+
+Evaluates the matching engine in rollback-only savepoints. Returns maximum executable quantity, estimated fee, net receipt/order cost and revision. quantity=0 estimates Max. No balances, trades, orders or receipts persist; database identity sequences may have gaps. Submission revalidates live state. No Idempotency-Key required.
+
+## Authentication
+
+Bearer JWT or an HMAC-signed Trade API key. Read keys cannot submit this command. See [authentication](/guides/authentication).
+
+This endpoint does not use the financial command receipt mechanism.
+
+## Parameters
+
+No path, query or command headers required.
+
+### JSON body
+
+| Field | Type | Required | Meaning |
+| --- | --- | --- | --- |
+| `side` | string | Yes | Side. |
+| `type` | string | Yes | Type. |
+| `price` | string or null | No | USDT price per BTC. |
+| `instrument` | string | No | Instrument. |
+| `reduceOnly` | boolean | No | If true, execution must reduce an existing derivative position. |
+| `quantity` | string | No | BTC quantity. Signed quantities on positions: positive long, negative short. |
+
+## Behavior
+
+Evaluates the matching engine in rollback-only savepoints. Returns maximum executable quantity, estimated fee, net receipt/order cost and revision. quantity=0 estimates Max. No balances, trades, orders or receipts persist; database identity sequences may have gaps. Submission revalidates live state. No Idempotency-Key required.
+
+## Request example
+
+Set `NOVCIC_URL=http://127.0.0.1:8081`. Private examples use a current session access token. For commands, create and persist a UUID `REQUEST_ID` once per intent. Placeholder values below are illustrative.
+
+```bash
+curl -sS -X POST "$NOVCIC_URL/api/order-preview" -H "Authorization: Bearer $NOVCIC_TOKEN" -H 'Content-Type: application/json' --data '{"side":"Buy","type":"Market","price":null,"instrument":"BTCUSDT","quantity":"0","reduceOnly":false}'
+```
+
+## Response
+
+Response type: [OrderPreview](/schemas/OrderPreview). No envelope or `retCode` wrapper is added.
+
+| Field | Type | Required | Meaning |
+| --- | --- | --- | --- |
+| `maximumQuantity` | string | Yes | Maximum quantity. |
+| `quantity` | string | Yes | BTC quantity. Signed quantities on positions: positive long, negative short. |
+| `fee` | string | Yes | Fee. |
+| `feeAsset` | string | Yes | Fee asset. |
+| `netReceipt` | string | Yes | Net receipt. |
+| `orderCost` | string | Yes | Order cost. |
+| `orderCostAsset` | string | Yes | Order cost asset. |
+| `revision` | string | Yes | Revision. |
+| `error` | string or null | No | Human-readable error; nullable on transfer history. |
+
+Illustrative structure (zero values and identifiers are placeholders, not market data):
+
+```json
+{
+  "maximumQuantity": "0",
+  "quantity": "0",
+  "fee": "0",
+  "feeAsset": "string",
+  "netReceipt": "0",
+  "orderCost": "0",
+  "orderCostAsset": "string",
+  "revision": "0",
+  "error": null
+}
+```
+
+## Errors and recovery
+
+Validation/domain failures return HTTP 400 with `{"error":"..."}`. Authentication may return an empty 401; never assume every error has JSON. Read the response status before parsing JSON.  See [errors and limits](/guides/errors).

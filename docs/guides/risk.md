@@ -15,3 +15,11 @@ Derivative P&L and option premiums flow through a clearing cash ledger. A positi
 Track the returned `amount` and `pending`, then refresh balances and portfolio. When no cash needs settlement, the response can contain only `message`. A profitable position can coexist with an unwithdrawable claim if the other side has not funded settlement.
 
 No endpoint changes margin mode, establishes isolated margin, sets risk tiers or submits a liquidation command for another account. Displaying a slider in a client must not imply capabilities absent from the API.
+
+## Account-wide leverage
+
+`portfolio.leverage` is the Unified Trading setting for all perpetual and expiry futures. `POST /api/leverage` accepts an integer string from 1 through 10 and requires an Idempotency-Key. It updates active futures positions and open orders together and rejects changes when margin is insufficient or required pricing is unavailable. Options remain covered; leverage does not reduce their collateral requirements.
+
+`POST /api/leverage-preview` accepts the same body, checks the proposed account and returns its risk snapshot without committing changes. It requires no idempotency key. Trade HMAC keys and JWT sessions can use both endpoints.
+
+New accounts default to 1?. Migrated accounts use the highest leverage among their active futures positions/orders; this avoids raising margin requirements on migration. The per-order `leverage` field is deprecated: omit it. A supplied futures value must equal the account setting or the order is rejected.

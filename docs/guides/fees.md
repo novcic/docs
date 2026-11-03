@@ -1,17 +1,20 @@
 # Execution fees
 
-Read `/api/config` for deployment-configured values. `feeModel` is `counterparty-dependent`. The legacy `fees: "0"` field describes user-to-user trading only; it does not mean every execution is free.
+Read `/api/config` for configured rates. `feeModel` is `execution`. Both customer makers and takers pay on every fill, including customer-to-customer executions. Unfilled quantity pays no fee.
 
-| Counterparty / product | Default charge |
-| --- | --- |
-| User-to-user | Zero |
-| AMM spot fill | Quantity × execution price × 0.001 |
-| AMM futures fill | Quantity × execution price × 0.00055 |
-| AMM option fill | Minimum of quantity × index × 0.0003 and premium notional × 0.07 |
-| LP share of charged AMM fees | 80% |
+| Product | Default rate | Fee asset |
+| --- | --- | --- |
+| Spot buy | Received BTC × 0.001 (0.10%) | BTC, deducted from receipt |
+| Spot sell | Received USDT × 0.001 (0.10%) | USDT, deducted from receipt |
+| Perpetual / expiry futures | Executed notional × 0.00055 (0.055%) | USDT |
+| Options | min(quantity × index × 0.0003, premium notional × 0.07) | USDT |
 
-Fees are charged in **USDT** to the ordinary participant executing against the AMM. The LP share is credited into the pool, increasing NAV; the remainder goes to exchange fee accounting. Internal conversion/liquidation strategy accounts are exempt. Fees and their allocation are quantized to eight decimals; no fee is charged for an unfilled order.
+On a customer fill against the AMM, 80% of the fee goes to the pool in the same asset and 20% to the exchange. Customer-to-customer fees go entirely to the exchange. Internal AMM, conversion and liquidation accounts are exempt from customer fees. Pool BTC and USDT fees are reported separately as `feesEarnedBtc` and `feesEarned`; both are already included in NAV.
 
-Example with default spot rate: a 0.001 BTC AMM fill at 75,000 USDT has notional 75 USDT and a 0.075 USDT fee. The LP allocation is 0.06 USDT and exchange allocation 0.015 USDT. These are illustrative calculations, not a price quote.
+Fees round down to eight decimal places per fill. The pool share rounds down again; the exchange receives the remainder. Settlement, fees and allocations commit atomically with the order receipt.
 
-Reserve fee headroom before placing an order. A spot sell against the AMM also incurs a USDT fee, normally payable from its sale proceeds. Portfolio, execution and ledger reconciliation should include fees; the Trade object does not include a separate fee field. Relevant ledger reasons include `AMM execution fee`; do not assume fees can be inferred from every counterparty ID without configuration and precision rules.
+For example, buying 0.001 BTC at 75,000 USDT spends 75 USDT and receives 0.000999 BTC after a 0.000001 BTC fee. If the seller is the AMM, the pool receives 0.00000080 BTC and the exchange 0.00000020 BTC. An ordinary customer seller instead pays 0.075 USDT from their sale proceeds.
+
+Private execution responses include `buyerFee`, `sellerFee`, `buyerFeeAsset`, and `sellerFeeAsset`. Historical executions predating these fields return null; use their historical ledger entries for reconciliation. Average execution price excludes fees. Wallet activity calls fees `Execution fee`; older raw entries can retain `AMM execution fee`.
+
+Use `POST /api/order-preview` for maximum quantity and estimates. Spot Max does not reserve an extra input-asset fee. Derivative sizing includes fees and collateral obligations, and resting derivative orders reserve fee capacity. A preview is a snapshot, not a promise: submission rechecks prices, balances and margin atomically.

@@ -7,6 +7,10 @@ Fields are case-sensitive. Numeric amounts and integer counters are JSON strings
 | `instrumentId` | string | Yes | Canonical instrument ID from GET /api/products. Use the ID, not the display symbol. |
 | `id` | string (uuid) | Yes | Stable identifier for this resource. |
 | `sequence` | string | Yes | Monotonic database sequence represented as a string. Gaps are valid. |
+| `buyerFee` | string or null | Yes | Buyer fee. |
+| `sellerFee` | string or null | Yes | Seller fee. |
+| `buyerFeeAsset` | string or null | Yes | Buyer fee asset. |
+| `sellerFeeAsset` | string or null | Yes | Seller fee asset. |
 | `makerOrderId` | string (uuid) | Yes | Maker order id. |
 | `takerOrderId` | string (uuid) | Yes | Taker order id. |
 | `buyerId` | string (uuid) | Yes | Buyer id. |

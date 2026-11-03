@@ -25,3 +25,5 @@ Spot quotes sample separate segments of a constant-product reserve curve, up to 
 Prices are rounded to ticks and coincident levels are merged. Small pools, insufficient precision, collateral constraints, absent references or post-only crossing checks can produce fewer levels. Quotes never deliberately cross resting orders. Unchanged quotes retain sequence/time priority and receive a freshness revalidation timestamp. Stale AMM quotes cannot execute after their short validity window without revalidation.
 
 LPs receive the configured share of AMM execution fees, currently 80% by default, already included in NAV. Returns also depend on inventory, price movement, derivative exposure and counterparty liquidity. `feesEarned` is cumulative fee income, not total investment profit. See [fees](./fees.md) for formulas.
+
+Execution fees accrue in their received asset: BTC for spot buys, USDT otherwise. A final all-share USDT redemption returns any BTC remainder smaller than 0.000001 BTC in kind, with a separate balance entry and withdrawal detail. Tradable balances still require actual counterparty conversion.

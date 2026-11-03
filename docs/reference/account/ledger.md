@@ -2,7 +2,7 @@
 
 `GET /api/ledger`
 
-Latest 100 wallet movements, descending ledger ID. Signed deltas are exact decimal strings. Use referenceId to associate movements with operations; historical pagination is not implemented.
+Latest 100 net wallet movements, descending ledger ID; zero-net reservations and releases are excluded before the limit. Signed deltas are exact decimal strings. Use referenceId to associate movements with operations; historical pagination is not implemented.
 
 ## Authentication
 
@@ -16,7 +16,7 @@ No path, query or command headers required.
 
 ## Behavior
 
-Latest 100 wallet movements, descending ledger ID. Signed deltas are exact decimal strings. Use referenceId to associate movements with operations; historical pagination is not implemented.
+Latest 100 net wallet movements, descending ledger ID; zero-net reservations and releases are excluded before the limit. Signed deltas are exact decimal strings. Use referenceId to associate movements with operations; historical pagination is not implemented.
 
 ## Request example
 
