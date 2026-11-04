@@ -58,7 +58,13 @@ Illustrative structure (zero values and identifiers are placeholders, not market
     "realizedCash": "0",
     "indexPrice": "0",
     "priceFresh": false,
-    "restricted": false
+    "restricted": false,
+    "totalWalletBalance": null,
+    "totalEquity": null,
+    "marginBalance": "0",
+    "availableBalance": null,
+    "initialMarginRate": null,
+    "maintenanceMarginRate": null
   }
 }
 ```

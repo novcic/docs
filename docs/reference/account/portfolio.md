@@ -2,7 +2,7 @@
 
 `GET /api/portfolio`
 
-A consistent account snapshot. Includes positions (including flat rows) with valuation, lifecycle and protection details, loans, supplies and DCA schedules; latest 100 risk events and liquidity requests. Funding balances are outside cross-margin equity.
+A consistent account snapshot. assets includes Funding and Unified Trading coin wallet balances, signed equity, mark-based P&L/option value, unsettled cash, transferable amounts and index-valued USD equity. risk distinguishes totalEquity from marginBalance, availableBalance and IMR/MMR percentages. Includes positions (including flat rows) with valuation, lifecycle and protection details, loans, supplies and DCA schedules; latest 100 risk events and liquidity requests. liquidityFees attributes actual BTC/USDT pool fee income using ownership at accrual, not current ownership. Fees remain compounded in NAV; this is cumulative reporting, not an unclaimed balance. Null amounts indicate unreconstructable history; since and completeHistory identify coverage. liquidityPerformance reports current share price/value, historical completed deposit and withdrawal USD totals, total P&L (current value + withdrawals - deposits), and nonannualized return on total deposits. Fees are included in NAV, not added again. Pending/cancelled requests are excluded. Missing historical values or unreconciled legacy shares make P&L unavailable. Funding balances are outside cross-margin equity.
 
 ## Authentication
 
@@ -16,7 +16,7 @@ No path, query or command headers required.
 
 ## Behavior
 
-A consistent account snapshot. Includes positions (including flat rows) with valuation, lifecycle and protection details, loans, supplies and DCA schedules; latest 100 risk events and liquidity requests. Funding balances are outside cross-margin equity.
+A consistent account snapshot. assets includes Funding and Unified Trading coin wallet balances, signed equity, mark-based P&L/option value, unsettled cash, transferable amounts and index-valued USD equity. risk distinguishes totalEquity from marginBalance, availableBalance and IMR/MMR percentages. Includes positions (including flat rows) with valuation, lifecycle and protection details, loans, supplies and DCA schedules; latest 100 risk events and liquidity requests. liquidityFees attributes actual BTC/USDT pool fee income using ownership at accrual, not current ownership. Fees remain compounded in NAV; this is cumulative reporting, not an unclaimed balance. Null amounts indicate unreconstructable history; since and completeHistory identify coverage. liquidityPerformance reports current share price/value, historical completed deposit and withdrawal USD totals, total P&L (current value + withdrawals - deposits), and nonannualized return on total deposits. Fees are included in NAV, not added again. Pending/cancelled requests are excluded. Missing historical values or unreconciled legacy shares make P&L unavailable. Funding balances are outside cross-margin equity.
 
 ## Request example
 
@@ -34,10 +34,13 @@ Response type: [Portfolio](/schemas/Portfolio). No envelope or `retCode` wrapper
 | --- | --- | --- | --- |
 | `leverage` | string | Yes | Integer leverage 1 through 10, serialized as a string. |
 | `risk` | RiskSnapshot | Yes |  |
+| `assets` | AccountAsset[] | Yes |  |
 | `positions` | PositionView[] | Yes |  |
 | `loans` | Loan[] | Yes |  |
 | `supplies` | Supply[] | Yes |  |
 | `liquidity` | LiquidityShare or null | Yes |  |
+| `liquidityFees` | LiquidityFeeEarnings | Yes |  |
+| `liquidityPerformance` | LiquidityPerformance | Yes |  |
 | `liquidityRequests` | LiquidityOperation[] | Yes |  |
 | `schedules` | DcaSchedule[] | Yes |  |
 | `events` | RiskEvent[] | Yes |  |
@@ -57,12 +60,34 @@ Illustrative structure (zero values and identifiers are placeholders, not market
     "realizedCash": "0",
     "indexPrice": "0",
     "priceFresh": false,
-    "restricted": false
+    "restricted": false,
+    "totalWalletBalance": null,
+    "totalEquity": null,
+    "marginBalance": "0",
+    "availableBalance": null,
+    "initialMarginRate": null,
+    "maintenanceMarginRate": null
   },
+  "assets": [],
   "positions": [],
   "loans": [],
   "supplies": [],
   "liquidity": null,
+  "liquidityFees": {
+    "btc": null,
+    "usdt": null,
+    "since": null,
+    "completeHistory": false
+  },
+  "liquidityPerformance": {
+    "sharePriceUsd": null,
+    "currentValueUsd": null,
+    "totalDepositedUsd": null,
+    "totalWithdrawnUsd": null,
+    "pnlUsd": null,
+    "returnPercent": null,
+    "completeHistory": false
+  },
   "liquidityRequests": [],
   "schedules": [],
   "events": []

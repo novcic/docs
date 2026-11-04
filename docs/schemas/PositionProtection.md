@@ -16,6 +16,7 @@ Fields are case-sensitive. Numeric amounts and integer counters are JSON strings
 | `triggerLeg` | string or null | Yes | Trigger leg. |
 | `triggerSequence` | string or null | Yes | Instrument trade sequence that atomically triggered the first leg; sibling is cancelled. |
 | `attempts` | string | Yes | Durable count of market-close attempts, including waits caused by domain restrictions. |
+| `retryDelayMs` | string | Yes | Delay after the latest automatic close attempt: grows to 1000 ms when nothing fills, resets to 100 ms after any fill. The job has no hard attempt limit. |
 | `nextAttemptAt` | string (date-time) | Yes | Next attempt at. |
 | `detail` | string or null | Yes | Human-readable status detail. Do not parse as an enum. |
 

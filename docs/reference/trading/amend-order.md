@@ -2,7 +2,7 @@
 
 `POST /api/amend-order`
 
-Atomically cancels/replaces the remaining quantity of an owned open/partially filled limit order. Uses opaque Order.version and matching instrument permission. Preserves prior fills; replacement has a new ID/priority and replacesId. Crossing price may execute immediately. All ordinary balance, margin, fee and price-band checks apply. Failure leaves original order unchanged; same price is a no-op.
+Atomically cancels/replaces the remaining quantity of an owned open/partially filled limit order. Uses opaque Order.version and matching instrument permission. Preserves prior fills; replacement has a new ID/priority and replacesId. Crossing price may execute immediately. Opening orders retain ordinary balance, margin and fee checks; reduce-only replacements use the same no-new-margin and fee-accrual rules as reduce-only placement. Futures replacements use the same directional limits as placement: buys at most 110% of the reference index; sells at least 90%; the passive side is not capped by this band. Failure leaves original order unchanged; same price is a no-op.
 
 ## Authentication
 
@@ -27,7 +27,7 @@ Bearer JWT or an HMAC-signed Trade API key. Read keys cannot submit this command
 
 ## Behavior
 
-Atomically cancels/replaces the remaining quantity of an owned open/partially filled limit order. Uses opaque Order.version and matching instrument permission. Preserves prior fills; replacement has a new ID/priority and replacesId. Crossing price may execute immediately. All ordinary balance, margin, fee and price-band checks apply. Failure leaves original order unchanged; same price is a no-op.
+Atomically cancels/replaces the remaining quantity of an owned open/partially filled limit order. Uses opaque Order.version and matching instrument permission. Preserves prior fills; replacement has a new ID/priority and replacesId. Crossing price may execute immediately. Opening orders retain ordinary balance, margin and fee checks; reduce-only replacements use the same no-new-margin and fee-accrual rules as reduce-only placement. Futures replacements use the same directional limits as placement: buys at most 110% of the reference index; sells at least 90%; the passive side is not capped by this band. Failure leaves original order unchanged; same price is a no-op.
 
 ## Request example
 

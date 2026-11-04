@@ -7,6 +7,7 @@ Fields are case-sensitive. Numeric amounts and integer counters are JSON strings
 | `symbol` | string | Yes | Display symbol; perpetual BTCUSDT is distinct from the spot ID BTCUSDT. |
 | `revision` | string | Yes | Revision. |
 | `quantityAsset` | string | Yes | Quantity asset. |
+| `markPrice` | string or null | Yes | Derivative mark used for P&L and liquidation risk; null for spot, unknown instruments or unavailable reference pricing. |
 | `lastPrice` | string or null | Yes | Last executed exchange price; null when unavailable. Not the external index. |
 | `high` | string or null | Yes | High. |
 | `low` | string or null | Yes | Low. |

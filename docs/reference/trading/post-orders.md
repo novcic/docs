@@ -2,7 +2,7 @@
 
 `POST /api/orders`
 
-Price-time matching on the canonical instrument. A successful HTTP response is not a guarantee of a full fill: inspect status, remaining and cancelReason. Market remainders cancel; no fabricated liquidity. Self-trade prevention cancels the incoming remainder.
+Price-time matching on the canonical instrument. Futures buy limits must be at most 110% of the fresh reference index; sell limits must be at least 90%. Lower buys and higher sells are allowed, subject to ordinary risk/tick rules. Adverse limits reject without automatic repricing. At execution, resting orders breaching their own side limit are cancelled; a valid passive order beyond the incoming side limit stays open and stops matching. Market and reduce-only orders cannot buy above the cap or sell below the floor. Reduce-only derivative orders reserve no new initial margin or fee capacity. Closing fees debit available USDT first; any shortfall becomes a signed USDT settlement liability with matching fee-recipient claims. Position size/direction, fresh prices and execution limits still apply. A successful HTTP response is not a guarantee of a full fill: inspect status, remaining and cancelReason. Market remainders cancel; no fabricated liquidity. Self-trade prevention cancels the incoming remainder.
 
 ## Authentication
 
@@ -30,7 +30,7 @@ Bearer JWT or an HMAC-signed Trade API key. Read keys cannot submit this command
 
 ## Behavior
 
-Price-time matching on the canonical instrument. A successful HTTP response is not a guarantee of a full fill: inspect status, remaining and cancelReason. Market remainders cancel; no fabricated liquidity. Self-trade prevention cancels the incoming remainder.
+Price-time matching on the canonical instrument. Futures buy limits must be at most 110% of the fresh reference index; sell limits must be at least 90%. Lower buys and higher sells are allowed, subject to ordinary risk/tick rules. Adverse limits reject without automatic repricing. At execution, resting orders breaching their own side limit are cancelled; a valid passive order beyond the incoming side limit stays open and stops matching. Market and reduce-only orders cannot buy above the cap or sell below the floor. Reduce-only derivative orders reserve no new initial margin or fee capacity. Closing fees debit available USDT first; any shortfall becomes a signed USDT settlement liability with matching fee-recipient claims. Position size/direction, fresh prices and execution limits still apply. A successful HTTP response is not a guarantee of a full fill: inspect status, remaining and cancelReason. Market remainders cancel; no fabricated liquidity. Self-trade prevention cancels the incoming remainder.
 
 ## Request example
 

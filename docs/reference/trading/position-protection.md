@@ -2,7 +2,7 @@
 
 `POST /api/position-protection`
 
-Perpetual, expiry futures and options. Entire-position, last-trade triggered OCO. Requires current lifecycleId/positionVersion and protectionVersion (0 for none). First triggered leg cancels sibling and starts durable reduce-only market attempts approximately every 100 ms, subject to serialization and risk/price checks. Same-direction additions are included; flat/reversal/expiry end the job. Cannot edit an active Closing job; stop it first. Both null remove protection. HMAC keys require the instrument product permission.
+Perpetual, expiry futures and options. Entire-position, last-trade triggered OCO. Requires current lifecycleId/positionVersion and protectionVersion (0 for none). First triggered leg cancels sibling and starts durable reduce-only closing. Empty attempts update the same job without creating orders; retryDelayMs backs off from 100 ms to 1000 ms, resetting to 100 ms after a fill. Actual fills retain order and trade history. Attempts counts all checks, not just submitted orders. No hard attempt limit; serialization, reduce-only capacity and ordinary price checks apply. Closing-fee shortfalls accrue in signed USDT settlement rather than blocking the close. Same-direction additions are included; flat/reversal/expiry end the job. Cannot edit an active Closing job; stop it first. Both null remove protection. HMAC keys require the instrument product permission.
 
 ## Authentication
 
@@ -29,7 +29,7 @@ Bearer JWT or an HMAC-signed Trade API key. Read keys cannot submit this command
 
 ## Behavior
 
-Perpetual, expiry futures and options. Entire-position, last-trade triggered OCO. Requires current lifecycleId/positionVersion and protectionVersion (0 for none). First triggered leg cancels sibling and starts durable reduce-only market attempts approximately every 100 ms, subject to serialization and risk/price checks. Same-direction additions are included; flat/reversal/expiry end the job. Cannot edit an active Closing job; stop it first. Both null remove protection. HMAC keys require the instrument product permission.
+Perpetual, expiry futures and options. Entire-position, last-trade triggered OCO. Requires current lifecycleId/positionVersion and protectionVersion (0 for none). First triggered leg cancels sibling and starts durable reduce-only closing. Empty attempts update the same job without creating orders; retryDelayMs backs off from 100 ms to 1000 ms, resetting to 100 ms after a fill. Actual fills retain order and trade history. Attempts counts all checks, not just submitted orders. No hard attempt limit; serialization, reduce-only capacity and ordinary price checks apply. Closing-fee shortfalls accrue in signed USDT settlement rather than blocking the close. Same-direction additions are included; flat/reversal/expiry end the job. Cannot edit an active Closing job; stop it first. Both null remove protection. HMAC keys require the instrument product permission.
 
 ## Request example
 
@@ -57,6 +57,7 @@ Response type: [PositionProtection](/schemas/PositionProtection). No envelope or
 | `triggerLeg` | string or null | Yes | Trigger leg. |
 | `triggerSequence` | string or null | Yes | Instrument trade sequence that atomically triggered the first leg; sibling is cancelled. |
 | `attempts` | string | Yes | Durable count of market-close attempts, including waits caused by domain restrictions. |
+| `retryDelayMs` | string | Yes | Delay after the latest automatic close attempt: grows to 1000 ms when nothing fills, resets to 100 ms after any fill. The job has no hard attempt limit. |
 | `nextAttemptAt` | string (date-time) | Yes | Next attempt at. |
 | `detail` | string or null | Yes | Human-readable status detail. Do not parse as an enum. |
 
@@ -76,6 +77,7 @@ Illustrative structure (zero values and identifiers are placeholders, not market
   "triggerLeg": null,
   "triggerSequence": null,
   "attempts": "0",
+  "retryDelayMs": "0",
   "nextAttemptAt": "2026-11-03T12:00:00Z",
   "detail": null
 }

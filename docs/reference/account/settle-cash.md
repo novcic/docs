@@ -2,7 +2,7 @@
 
 `POST /api/settle-cash`
 
-Transfers realized USDT claims from funded clearing liquidity. Can settle partially; pending remains in risk.realizedCash. No cash is created to satisfy an unfunded profit claim.
+Transfers signed USDT settlement claims, including fee receivables, from funded clearing liquidity. Can settle partially; pending remains in risk.realizedCash. No cash is created to satisfy an unfunded profit claim.
 
 ## Authentication
 
@@ -24,7 +24,7 @@ Bearer JWT session only. Signed API keys cannot call this operation. See [authen
 
 ## Behavior
 
-Transfers realized USDT claims from funded clearing liquidity. Can settle partially; pending remains in risk.realizedCash. No cash is created to satisfy an unfunded profit claim.
+Transfers signed USDT settlement claims, including fee receivables, from funded clearing liquidity. Can settle partially; pending remains in risk.realizedCash. No cash is created to satisfy an unfunded profit claim.
 
 ## Request example
 

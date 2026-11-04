@@ -2,7 +2,7 @@
 
 `GET /api/portfolio` returns `risk` alongside positions and product holdings. Unified Trading USDT contributes at 100%; unencumbered BTC contributes at 90% of the reference index. Funding wallets are excluded. Option cover is removed from reusable collateral.
 
-Initial margin includes futures positions and open derivative orders. Maintenance margin for futures positions is 0.5% of marked notional. Options are covered: short calls consume BTC and short puts consume full strike-value USDT. Signed realized cash and marked P&L affect equity.
+Initial margin includes futures positions and open derivative orders. Maintenance margin for futures positions is 0.5% of marked notional. Options are covered: short calls consume BTC and short puts consume full strike-value USDT. Signed realized cash and marked P&L affect margin balance.
 
 Use `transferableUsdt` and `transferableBtc`, not raw wallet availability, for possible outflows. These values are snapshots; the final command rechecks risk atomically. An amount that was transferable a moment ago can be rejected after prices, orders or positions change.
 
@@ -35,3 +35,18 @@ New accounts default to 1x. Migrated accounts use the highest leverage among the
 
 
 The terminal labels `returnOnMarginPercent` as ROI, shows Entry / Current last-trade movement, and separates Unrealized and Realized USDT lines. Liquidation price shows `-` when unavailable; the estimate retains the cross-account assumptions above. These live gross position metrics differ from the net completed lifecycle in [PnL history](./trading.md#closed-position-pnl-history), which includes actual fees and funding.
+
+
+## Equity, available balance and account margin rates
+
+`risk.totalWalletBalance` values Unified Trading coins, including reservations, at the reference index before collateral haircuts. `risk.totalEquity` adds unsettled realized cash and marked derivative P&L/option value. `risk.marginBalance` is the collateral-adjusted balance actually used by the engine; the existing `risk.equity` field remains its compatibility alias.
+
+`availableBalance = marginBalance - initialMargin`, retaining negative values to show a margin deficit. It is null when required references are stale. The signed balance is an account metric; order sizing and transferable amounts stay nonnegative, and all admission and coverage checks still apply. It is not spendable settlement-coin inventory. Opening execution fees require actual USDT; reduce-only fees use available USDT first and accrue any shortfall in signed settlement. Reduce-only orders reserve no new margin or fee capacity. Options retain their full-cover rules for new exposure.
+
+`initialMarginRate = 100 * initialMargin / marginBalance` and `maintenanceMarginRate = 100 * maintenanceMargin / marginBalance`. These are account usage percentages, distinct from the 0.5% futures maintenance requirement. Risk-increasing orders must leave IMR at or below 100%; existing positions can have IMR above 100% without liquidation. Liquidation begins at MMR **100% or higher**, provided references are fresh, and attempts partial reductions against real liquidity. No-position, zero-margin accounts are not liquidated. For positive requirements and nonpositive margin balance the rates are null rather than negative/infinite; clients should display a breached threshold. Stale rates are null; zero requirements with fresh prices produce 0%.
+
+`portfolio.assets` provides each Funding/Unified Trading coin's `walletBalance`, `locked`, `unrealizedPnl`, `realizedCash`, signed `equity`, `transferable`, and index-valued `usdValue`. All derivative settlement is in USDT. Thus a zero-USDT wallet with a losing USDT perpetual has negative USDT equity while BTC collateral can keep total equity positive. Unrealized losses do not rewrite physical wallet balances. `unrealizedPnl` includes option value; do not add position-level option P&L again. Negative and unpriced equity rows must not be hidden by a zero-balance filter.
+
+The Assets summary adds Funding and Unified Trading equity and excludes separately committed investment holdings. `GET /api/market` exposes `markPrice` using the same mark calculation as position risk, even without an owned position. It is null for spot or unavailable references. Last trade remains independent and drives TP/SL.
+
+The terminology and separation of wallet balance, total equity and collateral-adjusted margin follow [Bybit's account overview](https://www.bybit.com/en/help-center/article/Unified-Trading-Account-Asset-Page) and [account formula glossary](https://www.bybit.com/en/help-center/article/Glossary-Unified-Trading-Account). Novcic retains its documented collateral ratios, covered options, fixed maintenance requirement, transfer policy and real-liquidity execution; this release does not implement Bybit's borrowing, tiered risk, or full order-loss/haircut-loss model.

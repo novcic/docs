@@ -13,6 +13,8 @@ Fields are case-sensitive. Numeric amounts and integer counters are JSON strings
 | `usdt` | string | Yes | Usdt. |
 | `shares` | string | Yes | Product units, not necessarily token amounts. |
 | `received` | string | Yes | Asset amount actually received on liquidity withdrawal; zero while pending. |
+| `depositValueUsd` | string or null | Yes | Original submitted contribution at request-time USD reference value. Fixed historical estimate, nullable for unsupported legacy history; included in invested totals only after completion. |
+| `withdrawalValueUsd` | string or null | Yes | Completed payout at execution-time USD reference value, including any BTC dust. Null before completion or for unavailable legacy valuation. |
 | `status` | string | Yes | Current lifecycle state. See the relevant guide for transitions. |
 | `detail` | string | Yes | Human-readable status detail. Do not parse as an enum. |
 | `createdAt` | string (date-time) | Yes | UTC creation timestamp. |
