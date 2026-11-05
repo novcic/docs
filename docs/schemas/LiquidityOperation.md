@@ -8,6 +8,7 @@ Fields are case-sensitive. Numeric amounts and integer counters are JSON strings
 | `userId` | string (uuid) | Yes | Owning account UUID. |
 | `poolId` | string | Yes | Pool id. |
 | `kind` | string | Yes | Resource or wallet kind; spelling is case-sensitive. |
+| `sourceAccount` | string | Yes | Deposit source account and destination for cancellation refunds. Legacy deposits default to Unified Trading; not used for withdrawals. Values: `Funding`, `Unified Trading`. |
 | `asset` | string | Yes | BTC or USDT. |
 | `btc` | string | Yes | Btc. |
 | `usdt` | string | Yes | Usdt. |

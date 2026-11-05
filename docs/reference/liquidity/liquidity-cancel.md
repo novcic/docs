@@ -2,7 +2,7 @@
 
 `POST /api/liquidity-cancel`
 
-Only Pending requests can be cancelled. Deposit cancellation returns remaining escrow assets; completed conversions remain final. Withdrawal cancellation unlocks shares.
+Only Pending requests can be cancelled. Deposit cancellation returns remaining escrow assets in their current composition to the stored sourceAccount; completed conversions remain final. Withdrawal cancellation unlocks shares.
 
 ## Authentication
 
@@ -24,7 +24,7 @@ Bearer JWT session only. Signed API keys cannot call this operation. See [authen
 
 ## Behavior
 
-Only Pending requests can be cancelled. Deposit cancellation returns remaining escrow assets; completed conversions remain final. Withdrawal cancellation unlocks shares.
+Only Pending requests can be cancelled. Deposit cancellation returns remaining escrow assets in their current composition to the stored sourceAccount; completed conversions remain final. Withdrawal cancellation unlocks shares.
 
 ## Request example
 
@@ -44,6 +44,7 @@ Response type: [LiquidityOperation](/schemas/LiquidityOperation). No envelope or
 | `userId` | string (uuid) | Yes | Owning account UUID. |
 | `poolId` | string | Yes | Pool id. |
 | `kind` | string | Yes | Resource or wallet kind; spelling is case-sensitive. |
+| `sourceAccount` | string | Yes | Deposit source account and destination for cancellation refunds. Legacy deposits default to Unified Trading; not used for withdrawals. Values: `Funding`, `Unified Trading`. |
 | `asset` | string | Yes | BTC or USDT. |
 | `btc` | string | Yes | Btc. |
 | `usdt` | string | Yes | Usdt. |
@@ -64,6 +65,7 @@ Illustrative structure (zero values and identifiers are placeholders, not market
   "userId": "11111111-1111-4111-8111-111111111111",
   "poolId": "0",
   "kind": "string",
+  "sourceAccount": "Funding",
   "asset": "string",
   "btc": "0",
   "usdt": "0",

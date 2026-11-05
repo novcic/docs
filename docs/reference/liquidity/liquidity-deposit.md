@@ -2,7 +2,7 @@
 
 `POST /api/liquidity-deposit`
 
-Accepts either or both assets into escrow. An unbalanced contribution waits for real spot counterparties to reach approximately 50:50 value. Shares are issued only on activation at current NAV.
+Accepts either or both assets from sourceAccount (Funding or Unified Trading) into escrow atomically. Omitted/null sourceAccount defaults to Unified Trading. Funding is debited directly; Unified Trading contributions retain collateral checks. Cancellation returns remaining assets to the original source. An unbalanced contribution waits for real spot counterparties to reach approximately 50:50 value. Shares are issued only on activation at current NAV.
 
 ## Authentication
 
@@ -22,17 +22,18 @@ Bearer JWT session only. Signed API keys cannot call this operation. See [authen
 | --- | --- | --- | --- |
 | `btc` | string | Yes | Btc. |
 | `usdt` | string | Yes | Usdt. |
+| `sourceAccount` | string or null | No | Account debited for both assets. Omitted or null preserves Unified Trading. Funding contributions do not consume trading collateral. Values: `Funding`, `Unified Trading`, `null`. |
 
 ## Behavior
 
-Accepts either or both assets into escrow. An unbalanced contribution waits for real spot counterparties to reach approximately 50:50 value. Shares are issued only on activation at current NAV.
+Accepts either or both assets from sourceAccount (Funding or Unified Trading) into escrow atomically. Omitted/null sourceAccount defaults to Unified Trading. Funding is debited directly; Unified Trading contributions retain collateral checks. Cancellation returns remaining assets to the original source. An unbalanced contribution waits for real spot counterparties to reach approximately 50:50 value. Shares are issued only on activation at current NAV.
 
 ## Request example
 
 Set `NOVCIC_URL=http://127.0.0.1:8081`. Private examples use a current session access token. For commands, create and persist a UUID `REQUEST_ID` once per intent. Placeholder values below are illustrative.
 
 ```bash
-curl -sS -X POST "$NOVCIC_URL/api/liquidity-deposit" -H "Authorization: Bearer $NOVCIC_TOKEN" -H "Idempotency-Key: $REQUEST_ID" -H 'Content-Type: application/json' --data '{"btc":"0.01000000","usdt":"750.00000000"}'
+curl -sS -X POST "$NOVCIC_URL/api/liquidity-deposit" -H "Authorization: Bearer $NOVCIC_TOKEN" -H "Idempotency-Key: $REQUEST_ID" -H 'Content-Type: application/json' --data '{"btc":"0.01000000","usdt":"750.00000000","sourceAccount":"Funding"}'
 ```
 
 ## Response
@@ -45,6 +46,7 @@ Response type: [LiquidityOperation](/schemas/LiquidityOperation). No envelope or
 | `userId` | string (uuid) | Yes | Owning account UUID. |
 | `poolId` | string | Yes | Pool id. |
 | `kind` | string | Yes | Resource or wallet kind; spelling is case-sensitive. |
+| `sourceAccount` | string | Yes | Deposit source account and destination for cancellation refunds. Legacy deposits default to Unified Trading; not used for withdrawals. Values: `Funding`, `Unified Trading`. |
 | `asset` | string | Yes | BTC or USDT. |
 | `btc` | string | Yes | Btc. |
 | `usdt` | string | Yes | Usdt. |
@@ -65,6 +67,7 @@ Illustrative structure (zero values and identifiers are placeholders, not market
   "userId": "11111111-1111-4111-8111-111111111111",
   "poolId": "0",
   "kind": "string",
+  "sourceAccount": "Funding",
   "asset": "string",
   "btc": "0",
   "usdt": "0",

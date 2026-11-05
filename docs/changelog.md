@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.6.3 - Liquidity deposits from Funding
+
+- Liquidity contributions accept optional `sourceAccount`: Funding or Unified Trading. Existing requests default to Unified Trading. Deposits debit the selected account directly and atomically.
+- Requests retain their source account; cancellation refunds remaining assets to that account, including assets from completed conversions. Older deposits remain Unified Trading.
+- The deposit dialog shows both asset balances and percentage/Max controls for the selected account. History shows the source. Meadow branding is 1.6.5.
+
 ## 1.6.2 - Reduce-only closing fee settlement
 
 - Reduce-only derivative orders no longer require cash USDT for fees or reserve new margin/fee capacity. Unfunded fees become signed settlement liabilities with matching fee claims; fees remain charged and funds conserved. Both makers and takers, manual closes and TP/SL use this behavior.
