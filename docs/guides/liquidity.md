@@ -20,6 +20,8 @@ The pool can redeem a small request without closing every position if it has cho
 
 ## Quoting and allocation
 
+If the pool holds a contract that expired during downtime, quoting pauses while its original settlement window is recovered automatically. Positions and collateral stay reserved. Once the expired positions settle and current reference prices are fresh, quoting resumes without a manual pool reset. Missing historical data remains pending and retries; see [expiry recovery](./risk.md#expiry-recovery-after-downtime). A pending expired position makes investment-performance valuation unavailable until settlement.
+
 Spot quotes sample separate segments of a constant-product reserve curve, up to ten levels per side. Derivative quotes use a virtual constant-product inventory curve around reference/option values, bounded by real margin and option coverage. The default target is **five levels per side**, configurable from one to twenty. Those levels split the existing per-instrument budget; they do not multiply available collateral.
 
 Prices are rounded to ticks and coincident levels are merged. Small pools, insufficient precision, collateral constraints, absent references or post-only crossing checks can produce fewer levels. Quotes never deliberately cross resting orders. Unchanged quotes retain sequence/time priority and receive a freshness revalidation timestamp. Stale AMM quotes cannot execute after their short validity window without revalidation.

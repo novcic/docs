@@ -8,6 +8,16 @@ Use `transferableUsdt` and `transferableBtc`, not raw wallet availability, for p
 
 When a required price is stale, `priceFresh` is false. The index must be at most five seconds old. Option exposure additionally requires usable option references. Risk-increasing actions are blocked; cancellation and Funding-to-Trading collateral top-ups remain available. A restricted account requires attention to maintenance/coverage constraints; the lifecycle worker can cancel orders and attempt liquidation against real counterparties.
 
+## Expiry recovery after downtime
+
+Contracts expire at their scheduled UTC time even while the exchange is offline. On restart, expired instruments become `AwaitingSettlement`: orders and TP/SL are cancelled, trading stays disabled, and positions and collateral remain until settlement commits. Unsettled expired exposure makes the account's required pricing unavailable, including for expired futures. No current market price is substituted for the historical settlement price.
+
+The preferred delivery price is the elapsed-time-weighted local index over the preceding 30 minutes, with complete coverage and no observation gap over five seconds. If that window is missing, a background worker fetches the original window from Bybit's [historical index-price candles](https://bybit-exchange.github.io/docs/v5/market/index-kline). At least one minute after expiry, it requires exactly 30 distinct, contiguous, closed one-minute `linear` / `BTCUSDT` candles, validates timestamps and OHLC values, and averages their closes using decimal arithmetic. This is a disclosed fallback benchmark, **not** a reconstruction of the local spot/perpetual midquote TWAP.
+
+The computed price and original provider response are saved once per expiry. `instrument.settlementSource` reports `LocalIndexTwap` or `BybitIndex1mCloseAverage`; older settlements can have null provenance. `settlementPrice` is the final underlying index, not an option's intrinsic payout. Settlement, position close, PnL and cash claims commit together under the financial writer lock, once only. Multiple contracts sharing the expiry reuse the recovered window. A restart does not replace saved recovery data or repeat settlement.
+
+Unavailable or incomplete historical responses retry automatically, with a one-minute retry delay per expiry. Fetches have a five-second timeout and run outside the financial lock; other trading can continue. An affected pool keeps its obligations reserved and pauses quotes until recovery settles its expired positions, then resumes with fresh live prices. No fake fills, wallet credits or historical live-index samples are created. If the provider cannot supply the original window, settlement remains pending; operational recovery must retain the obligations rather than erase them.
+
 ## Realized cash
 
 Derivative P&L and option premiums flow through a clearing cash ledger. A positive `realizedCash` is a claim; it is not permission to mint wallet funds. `POST /api/settle-cash` settles available funded clearing cash, possibly partially, and leaves the rest pending. A negative claim is an obligation collected from available trading collateral.

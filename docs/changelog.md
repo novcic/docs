@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.7.0 - Expiry recovery after downtime
+
+- Missing local expiry-price windows recover automatically from 30 complete closed one-minute Bybit BTCUSDT index candles for the original window. The mean close is a disclosed fallback; complete local TWAP remains preferred.
+- Instruments expose `AwaitingSettlement` and nullable `settlementSource`. Expiry cancels resting orders and protection even without fresh live prices. Positions and collateral remain until settlement commits atomically once.
+- Historical responses are validated and retained. Failed recovery retries without holding the trading lock; a restart reuses saved recovery data. Pool quoting resumes after its expired positions settle and current prices are fresh.
+
 ## 1.6.3 - Liquidity deposits from Funding
 
 - Liquidity contributions accept optional `sourceAccount`: Funding or Unified Trading. Existing requests default to Unified Trading. Deposits debit the selected account directly and atomically.

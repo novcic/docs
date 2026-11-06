@@ -2,7 +2,7 @@
 
 `GET /api/products`
 
-Discover canonical IDs and status before trading. Perpetual symbol BTCUSDT maps to ID BTC-PERP. Last price and change may be null. IV and option marks are null when references are unsupported or stale. Index freshness threshold is five seconds.
+Discover canonical IDs and status before trading. Perpetual symbol BTCUSDT maps to ID BTC-PERP. Last price and change may be null. IV and option marks are null when references are unsupported or stale. Index freshness threshold is five seconds. Expired contracts report AwaitingSettlement until their local TWAP or validated historical fallback is available; settlementSource identifies the final method.
 
 ## Authentication
 
@@ -16,7 +16,7 @@ No path, query or command headers required.
 
 ## Behavior
 
-Discover canonical IDs and status before trading. Perpetual symbol BTCUSDT maps to ID BTC-PERP. Last price and change may be null. IV and option marks are null when references are unsupported or stale. Index freshness threshold is five seconds.
+Discover canonical IDs and status before trading. Perpetual symbol BTCUSDT maps to ID BTC-PERP. Last price and change may be null. IV and option marks are null when references are unsupported or stale. Index freshness threshold is five seconds. Expired contracts report AwaitingSettlement until their local TWAP or validated historical fallback is available; settlementSource identifies the final method.
 
 ## Request example
 
